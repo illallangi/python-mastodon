@@ -1,0 +1,86 @@
+[project]
+name = "illallangi-mastodon"
+authors = [
+    { name = "Andrew Cole", email = "andrew.cole@illallangi.com" }
+]
+maintainers = [
+    { name = "Andrew Cole", email = "andrew.cole@illallangi.com" }
+]
+description = "A collection of command line tools to interact with Mastodon."
+readme = "README.md"
+requires-python = ">=3.10.1"
+dependencies = [
+    "appdirs>=1.4.4",
+    "beautifulsoup4>=4.12.3",
+    "click>=8.1.7",
+    "more-itertools>=10.5.0",
+    "orjson>=3.10.7",
+    "python-dateutil>=2.9.0.post0",
+    "python-dotenv>=1.0.1",
+    "pytz>=2024.2",
+    "requests-cache>=1.2.1",
+    "tabulate>=0.9.0",
+    "validate-email-address>=1",
+    "yarl>=1.13.1",
+]
+keywords = [
+    "mastodon",
+    "cli",
+    "tools",
+]
+version = "0.0.0"
+classifiers =[
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.12",
+]
+license = { text = "MIT License" }
+[project.scripts]
+mastodon-tools = "illallangi.mastodon.tools:cli"
+[project.urls]
+Homepage = "https://github.com/illallangi/python-mastodon"
+Repository = "https://github.com/illallangi/python-mastodon.git"
+Issues = "https://github.com/illallangi/python-mastodon/issues"
+Changelog = "https://github.com/illallangi/python-mastodon/blob/master/CHANGELOG.md"
+[build-system]
+requires = [
+    "ruff>=0.6.9",
+    "hatchling>=1.25.0",
+]
+build-backend = "hatchling.build"
+[tool.ruff]
+lint.select = ["ALL"]
+lint.ignore = [
+    "COM812",
+    "E501",
+    "ISC001",
+]
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.6.9",
+    "hatchling>=1.25.0",
+    "commitizen>=3.29.1",
+    "pre-commit>=3.8.0",
+]
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".dockerignore",
+    "Dockerfile",
+    "Makefile",
+    "uv.lock",
+]
+[tool.hatch.build.targets.wheel]
+packages = ["src/illallangi"]
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "pep621"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:version",
+    "src/illallangi/mastodon/__version__.py:__version__",
+]
+update_changelog_on_bump = true
+major_version_zero = true
