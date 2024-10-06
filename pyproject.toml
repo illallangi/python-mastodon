@@ -13,6 +13,7 @@ dependencies = [
     "appdirs>=1.4.4",
     "beautifulsoup4>=4.12.3",
     "click>=8.1.7",
+    "diffsync>=2.0.0",
     "more-itertools>=10.5.0",
     "orjson>=3.10.7",
     "python-dateutil>=2.9.0.post0",
