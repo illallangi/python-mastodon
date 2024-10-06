@@ -1,5 +1,3 @@
-IMAGE_NAME=mastodon
-
 .PHONY: usage
 usage:
 	@echo "Usage: make [target]"
@@ -10,16 +8,11 @@ usage:
 	@echo "  build       Build the project"
 	@echo "  statuses    Run mastodon-tool statuses"
 	@echo "  swimmers    Run mastodon-tool swims"
-	@echo "  image       Build the container image"
-	@echo "  push        Push the container image to the registry"
 	@echo
 
 .PHONY: clean
 clean:
 	@git clean -Xdf
-	@if podman images -q $$DEV_REGISTRY/$(IMAGE_NAME) | grep -q .; then \
-		podman rmi -f $$(podman images -q $$DEV_REGISTRY/$(IMAGE_NAME)); \
-	fi
 
 .PHONY: ruff
 ruff:
@@ -59,14 +52,6 @@ swims: sync
 .PHONY: swims.json
 swims.json: sync
 	@uv run --quiet mastodon-tools swims --json | jq > $@
-
-.PHONY: image
-image: sync
-	@podman build -t $$DEV_REGISTRY/$(IMAGE_NAME):$$(uv run --quiet cz version -p | sed "s|\+.*||") --format=docker .
-
-.PHONY: push
-push: image
-	@podman push $$DEV_REGISTRY/$(IMAGE_NAME):$$(uv run --quiet cz version -p | sed "s|\+.*||")
 
 # PyPi package build and upload
 

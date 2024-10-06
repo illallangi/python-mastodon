@@ -5,4 +5,3 @@ Illallangi Mastodon is a collection of command line tools to interact with Masto
 ## Requirements
 
 - Python >= 3.10.12
-- Docker (optional, for containerized usage)
