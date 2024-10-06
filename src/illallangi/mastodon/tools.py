@@ -136,7 +136,7 @@ def swims(
                         "date": k.replace("_", " ").title(),
                         "laps": None,
                         "distance": None,
-                        "uri": v,
+                        "url": v,
                     }
                     for k, v in statistics.items()
                 ],

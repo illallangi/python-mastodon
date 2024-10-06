@@ -54,7 +54,7 @@ class SwimmingAdapter(diffsync.Adapter):
         for obj in MastodonClient().get_swims():
             self.add(
                 Swim(
-                    url=obj["uri"],
+                    url=obj["url"],
                     date=obj["date"],
                     laps=obj["laps"],
                     distance=obj["distance"],

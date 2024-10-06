@@ -105,23 +105,22 @@ class SwimsMixin:
             self._swims = sorted(
                 [
                     {
+                        "url": status["url"],
                         "date": get_swim_date(
                             status["regex"]["day"],
                             now=status["created_at"],
                         ).strftime("%Y-%m-%d"),
                         "laps": status["regex"]["lapcount"],
                         "distance": status["regex"]["distance"],
-                        "uri": status["uri"],
                     }
                     for status in [
                         {
-                            "created_at": status["created_at"],
+                            "url": status["url"],
                             "regex": re.search(
                                 regex,
                                 status["content"],
                             ),
                             "content": status["content"],
-                            "uri": status["uri"],
                         }
                         for status in [
                             {
@@ -130,7 +129,7 @@ class SwimsMixin:
                                 "tags": [
                                     tag["name"] for tag in status["@status"]["tags"]
                                 ],
-                                "uri": status["@status"]["uri"],
+                                "url": status["@status"]["uri"],
                             }
                             for status in self.get_statuses()
                         ]
