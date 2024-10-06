@@ -4,61 +4,55 @@ usage:
 	@echo
 	@echo "Targets:"
 	@echo "  clean       Remove all generated files"
-	@echo "  ruff        Run ruff format and check"
+	@echo "  lint        Run ruff format, check and uv sync"
+	@echo "  commit      Run cz commit"
 	@echo "  build       Build the project"
-	@echo "  statuses    Run mastodon-tool statuses"
-	@echo "  swimmers    Run mastodon-tool swims"
+	@echo
+	@echo "  help        Run mastodon-tools help"
+	@echo "  version     Run mastodon-tools version"
+	@echo "  statuses    Run mastodon-tools statuses"
+	@echo "  swims       Run mastodon-tools swims"
 	@echo
 
 .PHONY: clean
 clean:
 	@git clean -Xdf
 
-.PHONY: ruff
-ruff:
+.PHONY: lint
+lint:
 	@uv run --quiet ruff format src
 	@uv run --quiet ruff check src
-
-.PHONY: sync
-sync: ruff
 	@uv sync --quiet
 
 .PHONY: commit
-commit: sync
+commit: lint
 	@uv run --quiet cz commit
 
-# Shortcuts to run the mastodon-tools command
+.PHONY: build
+build: lint
+	@uv build
+
 
 .PHONY: help
-help: sync
+help: lint
 	@uv run --quiet mastodon-tools --help
 
 .PHONY: version
-version: sync
+version: lint
 	@uv run --quiet mastodon-tools --version
 
 .PHONY: statuses
-statuses: sync
+statuses: lint
 	@uv run --quiet mastodon-tools statuses
 
 .PHONY: statuses.json
-statuses.json: sync
+statuses.json: lint
 	@uv run --quiet mastodon-tools statuses --json | jq > $@
 
 .PHONY: swims
-swims: sync
+swims: lint
 	@uv run --quiet mastodon-tools swims
 
 .PHONY: swims.json
-swims.json: sync
+swims.json: lint
 	@uv run --quiet mastodon-tools swims --json | jq > $@
-
-# PyPi package build and upload
-
-.PHONY: build
-build: sync
-	@uv build
-
-.PHONY: test-upload
-test-upload: build
-	@UV_PUBLISH_URL=https://test.pypi.org/legacy/ uv publish
