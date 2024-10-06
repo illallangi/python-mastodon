@@ -1,15 +1,4 @@
-"""
-SwimmingAdapter is a custom adapter for syncing swimming data using the diffsync library.
-
-Attributes:
-    Swim (class): Alias for the MastodonSwim model.
-    top_level (list): List of top-level models to sync.
-    type (str): Type identifier for the adapter.
-
-Methods:
-    load():
-        Loads all Swim objects from the database and adds them to the adapter.
-"""
+"""SwimmingAdapter is a custom adapter for syncing swimming data using the diffsync library."""
 
 from typing import ClassVar
 
@@ -46,8 +35,8 @@ class SwimmingAdapter(diffsync.Adapter):
         """
         Load all Swim objects from the fediverse and adds them to the current instance.
 
-        This method retrieves all instances of the MastodonSwim from the fediverse,
-        converts them into Swim objects, and adds them to the current instance.
+        This method retrieves all statuses from the fediverse, converts them into Swim
+        objects, and adds them to the current instance.
         Returns:
             None
         """
@@ -56,7 +45,7 @@ class SwimmingAdapter(diffsync.Adapter):
                 Swim(
                     url=obj["url"],
                     date=obj["date"],
-                    laps=obj["laps"],
                     distance=obj["distance"],
+                    laps=obj["laps"],
                 ),
             )

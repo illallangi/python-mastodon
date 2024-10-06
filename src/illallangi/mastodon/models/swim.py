@@ -1,39 +1,4 @@
-"""
-Swim is a DiffSyncModel that represents a swimming record in a Mastodon application.
-
-Attributes:
-    _modelname (str): The name of the model.
-    _identifiers (tuple): The unique identifiers for the model.
-    _attributes (tuple): The attributes of the model.
-    pk (int): The primary key of the swimming record.
-    url (str): The URL of the swimming record.
-    date (str): The date of the swimming record.
-    laps (float): The number of laps in the swimming record.
-    distance (int): The distance covered in the swimming record.
-
-Methods:
-    create(cls, adapter, ids, attrs):
-        Creates a new swimming record or updates an existing one based on the URL.
-        Args:
-            cls: The class itself.
-            adapter: The adapter instance.
-            ids (dict): The identifiers for the swimming record.
-            attrs (dict): The attributes for the swimming record.
-        Returns:
-            item: The created or updated DiffSyncModel instance.
-
-    update(self, attrs):
-        Updates the attributes of the swimming record.
-        Args:
-            attrs (dict): The attributes to update.
-        Returns:
-            The updated DiffSyncModel instance.
-
-    delete(self):
-        Deletes the swimming record.
-        Returns:
-            The deleted DiffSyncModel instance.
-"""
+"""Swim is a DiffSyncModel that represents a swimming record in a Mastodon application."""
 
 import diffsync
 
@@ -45,8 +10,8 @@ class Swim(diffsync.DiffSyncModel):
     Attributes:
         url (str): URL identifier for the swim record.
         date (str): Date of the swim.
-        laps (float): Number of laps swum.
         distance (int): Distance swum in meters.
+        laps (float): Number of laps swum.
     Class Attributes:
         _modelname (str): Name of the model.
         _identifiers (tuple): Identifiers for the model.
@@ -76,14 +41,14 @@ class Swim(diffsync.DiffSyncModel):
     _identifiers = ("url",)
     _attributes = (
         "date",
-        "laps",
         "distance",
+        "laps",
     )
 
     url: str
     date: str
-    laps: float
     distance: int
+    laps: float
 
     @classmethod
     def create(
