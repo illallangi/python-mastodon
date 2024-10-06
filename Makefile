@@ -17,6 +17,8 @@ usage:
 .PHONY: clean
 clean:
 	@git clean -Xdf
+	@rm -f .git/hooks/*.sample
+	@chmod +x .git/hooks/*
 
 .PHONY: lint
 lint:
