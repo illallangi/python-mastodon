@@ -1,3 +1,9 @@
+## v0.3.1 (2024-10-06)
+
+### Fix
+
+- **status**: replaced status: int with content: str
+
 ## v0.3.0 (2024-10-06)
 
 ### Feat
