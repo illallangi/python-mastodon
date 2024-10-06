@@ -77,6 +77,11 @@ def statuses(
         )
         return
 
+    try:
+        columns = get_terminal_size().columns
+    except OSError:
+        columns = 80
+
     click.echo(
         tabulate.tabulate(
             [
@@ -90,7 +95,7 @@ def statuses(
             maxcolwidths=[
                 20,
                 40,
-                get_terminal_size().columns - 60,
+                columns - 60,
             ],
         )
     )
