@@ -38,6 +38,8 @@ from validate_email_address import validate_email
 from yarl import URL
 
 from illallangi.mastodon.__version__ import __version__
+from illallangi.mastodon.client.swim_statistics import SwimStatisticsMixin
+from illallangi.mastodon.client.swims import SwimsMixin
 
 load_dotenv(override=True)
 
@@ -64,7 +66,10 @@ def html_to_plaintext(
     return soup.get_text()
 
 
-class MastodonUser:
+class MastodonClient(
+    SwimsMixin,
+    SwimStatisticsMixin,
+):
     """
     Represents a Mastodon user.
 

@@ -26,7 +26,7 @@ import orjson
 import tabulate
 
 from .__version__ import __version__
-from .swimmer import MastodonSwimmer
+from .client import MastodonClient
 
 
 @click.group()
@@ -47,7 +47,7 @@ def cli(
     mastodon_user: str,
 ) -> None:
     """Set up the Mastodon client."""
-    ctx.obj = MastodonSwimmer(
+    ctx.obj = MastodonClient(
         email=mastodon_user,
     )
 
@@ -110,7 +110,7 @@ def swims(
 ) -> None:
     """Fetch and display swims from the Mastodon API."""
     swims = ctx.obj.get_swims()
-    statistics = ctx.obj.statistics
+    statistics = ctx.obj.get_swim_statistics()
 
     if json:
         click.echo(
