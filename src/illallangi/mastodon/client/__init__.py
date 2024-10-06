@@ -342,7 +342,10 @@ class MastodonClient(
             # Loop over the statuses in the response
             yield from [
                 {
+                    "id": status["id"],
                     "url": status["uri"],
+                    "datetime": status["created_at"],
+                    "content": html_to_plaintext(status["content"]),
                     "@status": status,
                     "@api": {
                         "from_cache": response.from_cache,

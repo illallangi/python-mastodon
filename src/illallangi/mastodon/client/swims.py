@@ -100,22 +100,25 @@ class SwimsMixin:
     def get_swims(
         self,
     ) -> list[dict[str, str | int]]:
-        """Return a list of dictionaries containing swim details such as date, laps, distance, and uri."""
+        """Return a list of dictionaries containing swim details such as date, laps, distance, and url."""
         if self._swims is None:
             self._swims = sorted(
                 [
                     {
+                        "id": status["id"],
                         "url": status["url"],
                         "date": get_swim_date(
                             status["regex"]["day"],
-                            now=status["created_at"],
+                            now=status["datetime"],
                         ).strftime("%Y-%m-%d"),
                         "laps": status["regex"]["lapcount"],
                         "distance": status["regex"]["distance"],
                     }
                     for status in [
                         {
+                            "id": status["id"],
                             "url": status["url"],
+                            "datetime": status["datetime"],
                             "regex": re.search(
                                 regex,
                                 status["content"],
@@ -124,7 +127,8 @@ class SwimsMixin:
                         }
                         for status in [
                             {
-                                "created_at": status["@status"]["created_at"],
+                                "id": status["id"],
+                                "datetime": status["datetime"],
                                 "content": status["@status"]["content"],
                                 "tags": [
                                     tag["name"] for tag in status["@status"]["tags"]
@@ -134,7 +138,7 @@ class SwimsMixin:
                             for status in self.get_statuses()
                         ]
                         if "swim" in status["tags"]
-                        and status["created_at"].startswith(str(datetime.now(UTC).year))
+                        and status["datetime"].startswith(str(datetime.now(UTC).year))
                     ]
                 ],
                 key=lambda status: datetime.strptime(
