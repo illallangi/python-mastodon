@@ -44,8 +44,8 @@ class Status(diffsync.DiffSyncModel):
     )
 
     url: str
+    content: str
     datetime: str
-    status: int
 
     @classmethod
     def create(
