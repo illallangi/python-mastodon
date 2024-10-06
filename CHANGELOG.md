@@ -1,3 +1,15 @@
+## v0.3.0 (2024-10-06)
+
+### Feat
+
+- **mastodonadapter**: added adapter and status model
+
+### Fix
+
+- **mastodon**: added id and url to all output
+- **mastodon-tools**: fixed column width when stdout is redirected
+- **status**: replaced uri with url
+
 ## v0.2.0 (2024-10-06)
 
 ### Feat
