@@ -1,3 +1,9 @@
+## v0.3.2 (2024-10-07)
+
+### Fix
+
+- **client**: updated client to return datetime and date objects when appropriate
+
 ## v0.3.1 (2024-10-06)
 
 ### Fix
