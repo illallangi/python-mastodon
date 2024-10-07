@@ -1,5 +1,7 @@
 """Status is a DiffSyncModel that represents a status record in a Mastodon application."""
 
+from datetime import datetime
+
 import diffsync
 
 
@@ -45,7 +47,7 @@ class Status(diffsync.DiffSyncModel):
 
     url: str
     content: str
-    datetime: str
+    datetime: datetime
 
     @classmethod
     def create(

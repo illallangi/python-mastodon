@@ -1,5 +1,7 @@
 """Swim is a DiffSyncModel that represents a swimming record in a Mastodon application."""
 
+from datetime import date
+
 import diffsync
 
 
@@ -46,7 +48,7 @@ class Swim(diffsync.DiffSyncModel):
     )
 
     url: str
-    date: str
+    date: date
     distance: int
     laps: float
 

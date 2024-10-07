@@ -36,7 +36,7 @@ from pytz import UTC, timezone
 
 def get_swim_date(
     day: str,
-    now: datetime | str,
+    now: datetime | str | None = None,
     tz: str | tzinfo | None = None,
 ) -> date:
     """
@@ -51,17 +51,18 @@ def get_swim_date(
         str: The date of the last occurrence of the weekday specified in the 'day' argument before the 'now' date, or the 'now' date if 'day' is "Today", or the date of yesterday if 'day' is "Yesterday", formatted as a string in the ISO 8601 format ("YYYY-MM-DD").7
 
     """
-    # If 'now' is not specified, use the current date and time
-    if now is None:
-        now = datetime.now(UTC)
-
-    # If 'now' is a string, convert it to a datetime object
-    if isinstance(now, str):
-        now = parse(now).replace(tzinfo=UTC)
-
     # If 'tz' is not specified, use the local timezone
     if tz is None:
         tz = gettz(None)
+
+    # If 'now' is not specified, use the current date and time
+    if now is None:
+        now = datetime.now(tz)
+
+    # If 'now' is a string, convert it to a datetime object
+    if isinstance(now, str):
+        now = parse(now).replace(tzinfo=tz)
+
 
     # If 'tz' is a string, convert it to a datetime.tzinfo object
     if isinstance(tz, str):
@@ -110,7 +111,7 @@ class SwimsMixin:
                         "date": get_swim_date(
                             status["regex"]["day"],
                             now=status["datetime"],
-                        ).strftime("%Y-%m-%d"),
+                        ),
                         "laps": status["regex"]["lapcount"],
                         "distance": status["regex"]["distance"],
                     }
@@ -138,11 +139,9 @@ class SwimsMixin:
                             for status in self.get_statuses()
                         ]
                         if "swim" in status["tags"]
-                        and status["datetime"].startswith(str(datetime.now(UTC).year))
+                        and status["datetime"].year == datetime.now(UTC).year
                     ]
                 ],
-                key=lambda status: datetime.strptime(
-                    status["date"], "%Y-%m-%d"
-                ).replace(tzinfo=UTC),
+                key=lambda status: status["date"]
             )
         return self._swims

@@ -23,7 +23,7 @@ Usage example:
 """
 
 from collections.abc import Generator
-from datetime import datetime
+from datetime import datetime, timezone
 from os import environ
 from pathlib import Path
 from typing import Any
@@ -344,7 +344,7 @@ class MastodonClient(
                 {
                     "id": status["id"],
                     "url": status["uri"],
-                    "datetime": status["created_at"],
+                    "datetime": datetime.fromisoformat(status["created_at"]).astimezone(timezone.utc),
                     "content": html_to_plaintext(status["content"]),
                     "@status": status,
                     "@api": {
