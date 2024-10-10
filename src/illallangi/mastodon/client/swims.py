@@ -63,7 +63,6 @@ def get_swim_date(
     if isinstance(now, str):
         now = parse(now).replace(tzinfo=tz)
 
-
     # If 'tz' is a string, convert it to a datetime.tzinfo object
     if isinstance(tz, str):
         tz = timezone(tz)
@@ -142,6 +141,6 @@ class SwimsMixin:
                         and status["datetime"].year == datetime.now(UTC).year
                     ]
                 ],
-                key=lambda status: status["date"]
+                key=lambda status: status["date"],
             )
         return self._swims

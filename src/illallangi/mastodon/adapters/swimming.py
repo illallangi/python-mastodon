@@ -5,7 +5,7 @@ from typing import ClassVar
 import diffsync
 
 from illallangi.mastodon import MastodonClient
-from illallangi.mastodon.models import Swim
+from illallangi.mastodon.diffsyncmodels import Swim
 
 
 class SwimmingAdapter(diffsync.Adapter):

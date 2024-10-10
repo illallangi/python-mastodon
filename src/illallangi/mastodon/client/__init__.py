@@ -344,7 +344,9 @@ class MastodonClient(
                 {
                     "id": status["id"],
                     "url": status["uri"],
-                    "datetime": datetime.fromisoformat(status["created_at"]).astimezone(timezone.utc),
+                    "datetime": datetime.fromisoformat(status["created_at"]).astimezone(
+                        timezone.utc
+                    ),
                     "content": html_to_plaintext(status["content"]),
                     "@status": status,
                     "@api": {
