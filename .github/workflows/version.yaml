@@ -23,6 +23,7 @@ jobs:
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: "${{ secrets.PAT }}"
+          extra_requirements: "uv"
 
       - name: Print Version
         run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
