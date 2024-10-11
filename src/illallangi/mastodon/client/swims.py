@@ -1,30 +1,3 @@
-"""
-This module provides functionality to track and analyze swimming activities for a Mastodon user.
-
-Classes:
-    MastodonSwimmer: A class that extends MastodonUser to include swimming activity tracking and statistics.
-
-Functions:
-    get_swim_date(day: str, now: datetime | str, tz: str | tzinfo | None = None) -> date:
-
-Constants:
-    USER: The Mastodon user email address, retrieved from the environment variable 'MASTODON_USER'.
-
-Regex:
-    regex: A compiled regular expression to extract swimming activity details from a string.
-
-Properties of MastodonSwimmer:
-    swims: A list of dictionaries containing details of swimming activities.
-    total_swims: The total number of swimming activities.
-    total_laps: The total number of laps swum.
-    total_distance: The total distance swum in meters.
-    remaining_distance: The remaining distance to reach a goal of 100,000 meters.
-    remaining_days: The number of days remaining in the current year.
-    average_distance: The average distance that needs to be swum per day to reach the goal.
-    average_laps: The average number of laps that need to be swum per day to reach the goal.
-    statistics: A dictionary containing various swimming statistics.
-"""
-
 import calendar
 import re
 from datetime import date, datetime, timedelta, tzinfo
@@ -39,18 +12,6 @@ def get_swim_date(
     now: datetime | str | None = None,
     tz: str | tzinfo | None = None,
 ) -> date:
-    """
-    Return the date of the last occurrence of a specific weekday before a given date, or the current date or the date of yesterday, depending on the value of the 'day' argument.
-
-    Args:
-        day: The day of the week as a string ("Monday", "Tuesday", etc.), "Today", or "Yesterday".
-        now: The date from which to calculate the last occurrence of the weekday, either as a datetime object or as a string in the ISO 8601 format ("YYYY-MM-DD"). Defaults to the current date and time.
-        tz: The timezone to which the 'now' date should be converted. Can be a string or a tzinfo object. Defaults to 'UTC'.
-
-    Returns:
-        str: The date of the last occurrence of the weekday specified in the 'day' argument before the 'now' date, or the 'now' date if 'day' is "Today", or the date of yesterday if 'day' is "Yesterday", formatted as a string in the ISO 8601 format ("YYYY-MM-DD").7
-
-    """
     # If 'tz' is not specified, use the local timezone
     if tz is None:
         tz = gettz(None)
@@ -93,14 +54,11 @@ regex = re.compile(
 
 
 class SwimsMixin:
-    """A mixin class that provides functionality to track and analyze swimming activities for a Mastodon user."""
-
     _swims = None
 
     def get_swims(
         self,
     ) -> list[dict[str, str | int]]:
-        """Return a list of dictionaries containing swim details such as date, laps, distance, and url."""
         if self._swims is None:
             self._swims = sorted(
                 [

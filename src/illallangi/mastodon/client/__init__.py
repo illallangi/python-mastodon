@@ -1,27 +1,3 @@
-"""
-This module provides the `MastodonUser` class, which represents a Mastodon user and provides various properties and methods to access user-related information and interact with the Mastodon API.
-
-Classes:
-    MastodonUser: Represents a Mastodon user and provides methods to access user information and interact with the Mastodon API.
-
-Usage example:
-
-    user = MastodonUser(email="user@example.com")
-    print(user.local_part)
-    print(user.domain)
-    print(user.webfinger_url)
-    print(user.webfinger)
-    print(user.activity_url)
-    print(user.mastodon_server)
-    print(user.directory_url)
-    print(user.directory)
-    print(user.profile)
-    print(user.profile_id)
-    print(user.statuses_url)
-    print(user.statuses)
-
-"""
-
 from collections.abc import Generator
 from datetime import datetime, timezone
 from os import environ
@@ -51,14 +27,6 @@ CACHE_NAME = Path(user_config_dir()) / "illallangi-mastodon.db"
 def html_to_plaintext(
     html_content: str,
 ) -> str:
-    """
-    Convert HTML content to plain text. This function takes an HTML string as input, parses it, and extracts the plain text content.
-
-    Args:
-        html_content (str): The HTML content to be converted to plain text.
-    Returns:
-        str: The plain text extracted from the HTML content.
-    """
     # Parse the HTML content
     soup = BeautifulSoup(html_content, "html.parser")
 
@@ -70,27 +38,10 @@ class MastodonClient(
     SwimsMixin,
     SwimStatisticsMixin,
 ):
-    """
-    Represents a Mastodon user.
-
-    This class provides properties to access various parts of the user's email address,
-    the Webfinger URL for the user, the Webfinger data, the activity URL for the user,
-    and the base URL of the Mastodon server the user is on.
-    """
-
     def __init__(
         self,
         email: str = USER,
     ) -> None:
-        """
-        Initialize a MastodonUser instance.
-
-        Args:
-            email (str): The user's email address.
-
-        Raises:
-            ValueError: If the email address is not valid.
-        """
         # Validate the email address
         if not validate_email(email):
             raise ValueError(email)
@@ -108,12 +59,6 @@ class MastodonClient(
     def get_info(
         self,
     ) -> None:
-        """
-        Retrieve information about the current state.
-
-        Returns:
-            dict: A dictionary containing the current timestamp and version information.
-        """
         return {
             "returned": int(datetime.now(UTC).timestamp()),
             "version": __version__,
@@ -123,21 +68,18 @@ class MastodonClient(
     def local_part(
         self,
     ) -> str:
-        """Get the local part of the email address (before the @)."""
         return self.email.split("@")[0]
 
     @property
     def domain(
         self,
     ) -> str:
-        """Get the domain of the email address (after the @)."""
         return self.email.split("@")[1]
 
     @property
     def webfinger_url(
         self,
     ) -> URL:
-        """Get the Webfinger URL for the user."""
         return URL(
             f"https://{self.domain}/.well-known/webfinger?resource=acct:{self.email}"
         )
@@ -146,11 +88,6 @@ class MastodonClient(
     def webfinger(
         self,
     ) -> dict:
-        """
-        Get the Webfinger data for the user.
-
-        This property makes a GET request to the Webfinger URL and parses the response as JSON.
-        """
         # Make a GET request to the Webfinger URL
         response = self._session.get(
             self.webfinger_url,
@@ -164,11 +101,6 @@ class MastodonClient(
     def activity_url(
         self,
     ) -> URL:
-        """
-        Get the activity URL for the user.
-
-        This property extracts the activity URL from the Webfinger data.
-        """
         # Extract the activity URL from the Webfinger data and return it
         return URL(
             next(
@@ -183,11 +115,6 @@ class MastodonClient(
     def mastodon_server(
         self,
     ) -> URL:
-        """
-        Get the base URL of the Mastodon server the user is on.
-
-        This property removes the path and query from the activity URL to get the base URL.
-        """
         # Remove the path and query from the activity URL to get the base URL and return it
         return self.activity_url.with_path("").with_query({})
 
@@ -195,11 +122,6 @@ class MastodonClient(
     def directory_url(
         self,
     ) -> URL:
-        """
-        Get the directory URL for the user.
-
-        This property constructs the directory URL from the Mastodon server base URL.
-        """
         # Construct the directory URL from the Mastodon server base URL and return it
         return self.mastodon_server / "api" / "v1" / "directory"
 
@@ -207,22 +129,6 @@ class MastodonClient(
     def directory(
         self,
     ) -> dict:
-        """
-        Get the directory data for the user.
-
-        This property makes a GET request to the directory URL and parses the response as JSON,
-        and stores each profile in a dictionary with the profile uri as the key.
-
-        It handles pagination by checking if the "next" link is present in the response,
-        and updating the URL accordingly.
-
-        Returns:
-            dict: A dictionary of profiles, with the profile uri as the key.
-
-        Raises:
-            RequestException: If the GET request fails.
-            JSONDecodeError: If the response cannot be decoded as JSON.
-        """
         # Initialize an empty dictionary to store the profiles
         result = {}
         # Format the directory URL with the limit
@@ -258,17 +164,6 @@ class MastodonClient(
     def profile(
         self,
     ) -> dict:
-        """
-        Get the profile data for the user.
-
-        This property returns the profile that matches the user's activity URL in the directory data.
-
-        Returns:
-            dict: The profile data for the user.
-
-        Raises:
-            StopIteration: If no matching profile is found in the directory data.
-        """
         if self.activity_url.human_repr() in self.directory:
             return self.directory[self.activity_url.human_repr()]
 
@@ -278,11 +173,6 @@ class MastodonClient(
     def profile_id(
         self,
     ) -> str:
-        """
-        Get the profile ID for the user.
-
-        This property extracts the profile ID from the profile data.
-        """
         # Extract the profile ID from the profile data and return it
         return self.profile["id"]
 
@@ -290,11 +180,6 @@ class MastodonClient(
     def statuses_url(
         self,
     ) -> URL:
-        """
-        Get the status URL for the user.
-
-        This property constructs the status URL from the Mastodon server base URL.
-        """
         # Construct the status URL from the Mastodon server base URL and return it
         return (
             self.mastodon_server
@@ -308,22 +193,6 @@ class MastodonClient(
     def get_statuses(
         self,
     ) -> Generator[dict[str, Any], None, None]:
-        """
-        Fetch the statuses from the Mastodon API.
-
-        This function makes a GET request to the statuses URL, parses the response as JSON,
-        and stores each status in a dictionary with the status ID as the key.
-
-        It handles pagination by checking if the "next" link is present in the response,
-        and updating the URL accordingly.
-
-        Returns:
-            dict: A dictionary of statuses, with the status ID as the key.
-
-        Raises:
-            RequestException: If the GET request fails.
-            JSONDecodeError: If the response cannot be decoded as JSON.
-        """
         # Format the statuses URL with the limit
         url = self.statuses_url % {"limit": 10}
         # Loop until there are no more pages of statuses

@@ -53,6 +53,7 @@ build-backend = "hatchling.build"
 [tool.ruff]
 lint.select = ["ALL"]
 lint.ignore = [
+    "D",
     "COM812",
     "E501",
     "ISC001",

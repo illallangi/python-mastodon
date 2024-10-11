@@ -1,24 +1,3 @@
-"""
-This module provides command-line tools for interacting with the Mastodon API.
-
-Commands:
-    cli: The main entry point for the command-line interface.
-    statuses: Fetches and displays statuses from the Mastodon API.
-    swims: Fetches and displays swims from the Mastodon API.
-
-Options:
-    --mastodon-user: The Mastodon user to authenticate as (required).
-    --json: Output the results in JSON format.
-
-Dependencies:
-    - tabulate: Used for formatting table output.
-    - orjson: Used for JSON serialization.
-    - click: Used for creating command-line interfaces.
-    - MastodonClient: Custom client for interacting with the Mastodon API.
-    - __version__: The version of the mastodon-tools package.
-
-"""
-
 from os import get_terminal_size
 
 import click
@@ -46,7 +25,6 @@ def cli(
     *,
     mastodon_user: str,
 ) -> None:
-    """Set up the Mastodon client."""
     ctx.obj = MastodonClient(
         email=mastodon_user,
     )
@@ -64,7 +42,6 @@ def statuses(
     *,
     json: bool,
 ) -> None:
-    """Fetch and display statuses from the Mastodon API."""
     statuses = ctx.obj.get_statuses()
     if json:
         click.echo(
@@ -113,7 +90,6 @@ def swims(
     *,
     json: bool,
 ) -> None:
-    """Fetch and display swims from the Mastodon API."""
     swims = ctx.obj.get_swims()
     statistics = ctx.obj.get_swim_statistics()
 
