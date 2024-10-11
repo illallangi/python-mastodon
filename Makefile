@@ -19,7 +19,7 @@ clean:
 	@git clean -Xdf
 	@mkdir -p .git/hooks
 	@rm -f .git/hooks/*.sample
-	@find .git/hooks/ -type f  | while read i; do chmod +x $$i; done 
+	@find .git/hooks/ -type f  | while read i; do chmod +x $$i; done
 
 .PHONY: lint
 lint:
