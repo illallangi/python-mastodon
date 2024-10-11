@@ -69,13 +69,15 @@ dev-dependencies = [
 ]
 [tool.hatch.build.targets.sdist]
 exclude = [
-    ".dockerignore",
-    "Dockerfile",
     "Makefile",
     "uv.lock",
 ]
 [tool.hatch.build.targets.wheel]
 packages = ["src/illallangi"]
+exclude = [
+    "Makefile",
+    "uv.lock",
+]
 [tool.commitizen]
 name = "cz_conventional_commits"
 version_provider = "pep621"
