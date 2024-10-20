@@ -1,3 +1,10 @@
+## v0.3.4 (2024-10-20)
+
+### Refactor
+
+- **mastodon-tools**: refactored output
+- **all**: moved environment variable configuration out of client
+
 ## v0.3.3 (2024-10-10)
 
 ### Refactor
