@@ -1,13 +1,7 @@
 import math
 from datetime import datetime
-from os import environ
 
-from dotenv import load_dotenv
 from pytz import UTC
-
-load_dotenv(override=True)
-
-USER = environ.get("MASTODON_USER", None)
 
 
 class SwimStatisticsMixin:

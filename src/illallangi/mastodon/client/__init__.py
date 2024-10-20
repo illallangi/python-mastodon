@@ -1,13 +1,11 @@
 from collections.abc import Generator
 from datetime import datetime, timezone
-from os import environ
 from pathlib import Path
 from typing import Any
 
 import more_itertools
 from appdirs import user_config_dir
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 from pytz import UTC
 from requests_cache import CachedSession
 from validate_email_address import validate_email
@@ -16,10 +14,6 @@ from yarl import URL
 from illallangi.mastodon.__version__ import __version__
 from illallangi.mastodon.client.swim_statistics import SwimStatisticsMixin
 from illallangi.mastodon.client.swims import SwimsMixin
-
-load_dotenv(override=True)
-
-USER = environ.get("MASTODON_USER", None)
 
 CACHE_NAME = Path(user_config_dir()) / "illallangi-mastodon.db"
 
@@ -40,14 +34,14 @@ class MastodonClient(
 ):
     def __init__(
         self,
-        email: str = USER,
+        mastodon_user: str,
     ) -> None:
         # Validate the email address
-        if not validate_email(email):
-            raise ValueError(email)
+        if not validate_email(mastodon_user):
+            raise ValueError(mastodon_user)
 
         # Store the email address
-        self.email = email
+        self.user = mastodon_user
 
         # Initialize a CachedSession with a SQLite backend
         self._session = CachedSession(
@@ -68,20 +62,20 @@ class MastodonClient(
     def local_part(
         self,
     ) -> str:
-        return self.email.split("@")[0]
+        return self.user.split("@")[0]
 
     @property
     def domain(
         self,
     ) -> str:
-        return self.email.split("@")[1]
+        return self.user.split("@")[1]
 
     @property
     def webfinger_url(
         self,
     ) -> URL:
         return URL(
-            f"https://{self.domain}/.well-known/webfinger?resource=acct:{self.email}"
+            f"https://{self.domain}/.well-known/webfinger?resource=acct:{self.user}"
         )
 
     @property

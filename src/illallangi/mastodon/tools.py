@@ -22,11 +22,12 @@ from illallangi.mastodon.client import MastodonClient
 )
 def cli(
     ctx: click.Context,
-    *,
-    mastodon_user: str,
+    *args: list,
+    **kwargs: dict,
 ) -> None:
     ctx.obj = MastodonClient(
-        email=mastodon_user,
+        *args,
+        **kwargs,
     )
 
 
