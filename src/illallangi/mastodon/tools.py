@@ -1,25 +1,47 @@
-from os import get_terminal_size
-
 import click
 import orjson
 import tabulate
+from dotenv import load_dotenv
 
 from illallangi.mastodon.__version__ import __version__
 from illallangi.mastodon.client import MastodonClient
 
-
-@click.group()
-@click.pass_context
-@click.version_option(
-    version=__version__,
-    prog_name="mastodon-tools",
+load_dotenv(
+    override=True,
 )
-@click.option(
+
+json_output_format_option = click.option(
+    "--json",
+    "output_format",
+    flag_value="json",
+    help="Output as JSON.",
+)
+
+mastodon_user_option = click.option(
     "--mastodon-user",
     type=click.STRING,
     envvar="MASTODON_USER",
     required=True,
 )
+
+table_output_format_option = click.option(
+    "--table",
+    "output_format",
+    flag_value="table",
+    default=True,
+    help="Output as a table (default).",
+)
+
+version_option = click.version_option(
+    version=__version__,
+    prog_name="rdf-tools",
+)
+
+
+@click.group()
+@click.pass_context
+@mastodon_user_option
+@version_option
 def cli(
     ctx: click.Context,
     *args: list,
@@ -33,96 +55,79 @@ def cli(
 
 @cli.command()
 @click.pass_context
-@click.option(
-    "--json",
-    is_flag=True,
-    help="Output as JSON.",
-)
+@json_output_format_option
+@table_output_format_option
 def statuses(
     ctx: click.Context,
-    *,
-    json: bool,
+    *args: list,
+    **kwargs: dict,
 ) -> None:
-    statuses = ctx.obj.get_statuses()
-    if json:
-        click.echo(
-            orjson.dumps(
-                {
-                    "statuses": list(statuses),
-                },
-                option=orjson.OPT_SORT_KEYS,
-            ),
-        )
-        return
-
-    try:
-        columns = get_terminal_size().columns
-    except OSError:
-        columns = 80
-
-    click.echo(
-        tabulate.tabulate(
-            [
-                {k: v for k, v in status.items() if not k.startswith("@")}
-                for status in statuses
-            ],
-            headers="keys",
-            tablefmt="presto",
-            numalign="left",
-            stralign="left",
-            maxcolwidths=[
-                20,
-                40,
-                columns - 60,
-            ],
-        )
+    output(
+        *args,
+        fn=ctx.obj.get_statuses,
+        **kwargs,
     )
 
 
 @cli.command()
 @click.pass_context
-@click.option(
-    "--json",
-    is_flag=True,
-    help="Output as JSON.",
-)
+@json_output_format_option
+@table_output_format_option
 def swims(
     ctx: click.Context,
-    *,
-    json: bool,
+    *args: list,
+    **kwargs: dict,
 ) -> None:
-    swims = ctx.obj.get_swims()
-    statistics = ctx.obj.get_swim_statistics()
+    output(
+        *args,
+        fn=ctx.obj.get_swims,
+        **kwargs,
+    )
 
-    if json:
+
+def output(
+    fn: callable,
+    *args: list,
+    output_format: str,
+    **kwargs: dict,
+) -> None:
+    objs = fn(
+        *args,
+        **kwargs,
+    )
+
+    if not objs:
+        return
+
+    # JSON output
+    if output_format == "json":
         click.echo(
             orjson.dumps(
-                {
-                    "swims": list(swims),
-                    "statistics": statistics,
-                },
+                [
+                    {
+                        **obj,
+                    }
+                    for obj in objs
+                ],
                 option=orjson.OPT_SORT_KEYS,
             ),
         )
         return
 
-    click.echo(
-        tabulate.tabulate(
-            [
-                *[
-                    {k: v for k, v in swim.items() if not k.startswith("@")}
-                    for swim in swims
+    # Table output
+    if output_format == "table":
+        click.echo(
+            tabulate.tabulate(
+                [
+                    {k: v for k, v in obj.items() if not k.startswith("@")}
+                    for obj in objs
                 ],
-                *[
-                    {
-                        "date": k.replace("_", " ").title(),
-                        "laps": None,
-                        "distance": None,
-                        "url": v,
-                    }
-                    for k, v in statistics.items()
-                ],
-            ],
-            headers="keys",
+                headers="keys",
+                tablefmt="presto",
+                numalign="left",
+                stralign="left",
+            )
         )
-    )
+        return
+
+    raise NotImplementedError
