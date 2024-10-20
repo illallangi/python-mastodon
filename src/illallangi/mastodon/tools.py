@@ -4,8 +4,8 @@ import click
 import orjson
 import tabulate
 
-from .__version__ import __version__
-from .client import MastodonClient
+from illallangi.mastodon.__version__ import __version__
+from illallangi.mastodon.client import MastodonClient
 
 
 @click.group()
