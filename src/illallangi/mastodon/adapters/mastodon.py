@@ -7,6 +7,17 @@ from illallangi.mastodon.diffsyncmodels import Status
 
 
 class MastodonAdapter(diffsync.Adapter):
+    def __init__(
+        self,
+        *args: list,
+        **kwargs: dict,
+    ) -> None:
+        super().__init__()
+        self.client = MastodonClient(
+            *args,
+            **kwargs,
+        )
+
     Status = Status
 
     top_level: ClassVar = [
@@ -18,7 +29,7 @@ class MastodonAdapter(diffsync.Adapter):
     def load(
         self,
     ) -> None:
-        for obj in MastodonClient().get_statuses():
+        for obj in self.client.get_statuses():
             self.add(
                 Status(
                     url=obj["url"],
