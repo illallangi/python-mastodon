@@ -6,19 +6,30 @@ from illallangi.mastodon import MastodonClient
 from illallangi.mastodon.diffsyncmodels import Swim
 
 
-class SwimmingAdapter(diffsync.Adapter):
+class FitnessAdapter(diffsync.Adapter):
+    def __init__(
+        self,
+        *args: list,
+        **kwargs: dict,
+    ) -> None:
+        super().__init__()
+        self.client = MastodonClient(
+            *args,
+            **kwargs,
+        )
+
     Swim = Swim
 
     top_level: ClassVar = [
         "Swim",
     ]
 
-    type = "mastodon_swimming"
+    type = "mastodon_fitness"
 
     def load(
         self,
     ) -> None:
-        for obj in MastodonClient().get_swims():
+        for obj in self.client.get_swims():
             self.add(
                 Swim(
                     url=obj["url"],
