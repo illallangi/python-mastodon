@@ -1,3 +1,9 @@
+## v0.3.5 (2024-10-21)
+
+### Fix
+
+- **adapter**: changed to args and kwargs
+
 ## v0.3.4 (2024-10-20)
 
 ### Refactor
