@@ -1,3 +1,9 @@
+## v0.3.6 (2024-10-21)
+
+### Fix
+
+- **SwimmingAdapter**: renamed to FitnessAdapter and implemented *args **kwargs
+
 ## v0.3.5 (2024-10-21)
 
 ### Fix
