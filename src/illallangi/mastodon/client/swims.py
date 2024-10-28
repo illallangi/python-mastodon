@@ -1,10 +1,13 @@
 import calendar
 import re
 from datetime import date, datetime, timedelta, tzinfo
+from typing import Any
 
 from dateutil.parser import parse
 from dateutil.tz import gettz
 from pytz import UTC, timezone
+
+from illallangi.mastodon.models import Swim
 
 
 def get_swim_date(
@@ -58,47 +61,56 @@ class SwimsMixin:
 
     def get_swims(
         self,
+        *_: list[Any],
+        debug: bool = True,
     ) -> list[dict[str, str | int]]:
         if self._swims is None:
-            self._swims = sorted(
-                [
+            self._swims = [
+                Swim(
+                    url=status["url"],
+                    date=get_swim_date(
+                        status["regex"]["day"],
+                        now=status["datetime"],
+                    ),
+                    distance=int(status["regex"]["distance"]),
+                    laps=float(status["regex"]["lapcount"]),
+                    **(
+                        {
+                            "api": status["api"],
+                            "id": status["id"],
+                            "status": status["status"],
+                        }
+                        if debug
+                        else {}
+                    ),
+                )
+                for status in [
                     {
+                        "api": status["api"],
                         "id": status["id"],
+                        "status": status["status"],
                         "url": status["url"],
-                        "date": get_swim_date(
-                            status["regex"]["day"],
-                            now=status["datetime"],
+                        "datetime": status["datetime"],
+                        "regex": re.search(
+                            regex,
+                            status["content"],
                         ),
-                        "laps": status["regex"]["lapcount"],
-                        "distance": status["regex"]["distance"],
+                        "content": status["content"],
                     }
                     for status in [
                         {
-                            "id": status["id"],
-                            "url": status["url"],
-                            "datetime": status["datetime"],
-                            "regex": re.search(
-                                regex,
-                                status["content"],
-                            ),
-                            "content": status["content"],
+                            "api": status._api,  # noqa: SLF001
+                            "content": status._status["content"],  # noqa: SLF001
+                            "datetime": status.datetime,
+                            "id": status._id,  # noqa: SLF001
+                            "status": status._status,  # noqa: SLF001
+                            "tags": [tag["name"] for tag in status._status["tags"]],  # noqa: SLF001
+                            "url": status._status["uri"],  # noqa: SLF001
                         }
-                        for status in [
-                            {
-                                "id": status["id"],
-                                "datetime": status["datetime"],
-                                "content": status["@status"]["content"],
-                                "tags": [
-                                    tag["name"] for tag in status["@status"]["tags"]
-                                ],
-                                "url": status["@status"]["uri"],
-                            }
-                            for status in self.get_statuses()
-                        ]
-                        if "swim" in status["tags"]
-                        and status["datetime"].year == datetime.now(UTC).year
+                        for status in self.get_statuses()
                     ]
-                ],
-                key=lambda status: status["date"],
-            )
+                    if "swim" in status["tags"]
+                    and status["datetime"].year == datetime.now(UTC).year
+                ]
+            ]
         return self._swims

@@ -312,7 +312,9 @@ version = "0.3.6"
 source = { editable = "." }
 dependencies = [
     { name = "appdirs" },
+    { name = "attrs" },
     { name = "beautifulsoup4" },
+    { name = "cattrs" },
     { name = "click" },
     { name = "diffsync" },
     { name = "more-itertools" },
@@ -338,7 +340,9 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "appdirs", specifier = ">=1.4.4" },
+    { name = "attrs", specifier = ">=24.2.0" },
     { name = "beautifulsoup4", specifier = ">=4.12.3" },
+    { name = "cattrs", specifier = ">=24.1.2" },
     { name = "click", specifier = ">=8.1.7" },
     { name = "diffsync", specifier = ">=2.0.0" },
     { name = "more-itertools", specifier = ">=10.5.0" },

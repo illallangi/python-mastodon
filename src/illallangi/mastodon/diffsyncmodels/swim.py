@@ -1,6 +1,7 @@
 from datetime import date
 
 import diffsync
+from yarl import URL
 
 
 class Swim(diffsync.DiffSyncModel):
@@ -12,7 +13,8 @@ class Swim(diffsync.DiffSyncModel):
         "laps",
     )
 
-    url: str
+    url: URL
+
     date: date
     distance: int
     laps: float

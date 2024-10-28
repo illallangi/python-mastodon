@@ -32,9 +32,9 @@ class FitnessAdapter(diffsync.Adapter):
         for obj in self.client.get_swims():
             self.add(
                 Swim(
-                    url=obj["url"],
-                    date=obj["date"],
-                    distance=obj["distance"],
-                    laps=obj["laps"],
+                    url=obj.url,
+                    date=obj.date,
+                    distance=obj.distance,
+                    laps=obj.laps,
                 ),
             )

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import diffsync
+from yarl import URL
 
 
 class Status(diffsync.DiffSyncModel):
@@ -11,7 +12,8 @@ class Status(diffsync.DiffSyncModel):
         "datetime",
     )
 
-    url: str
+    url: URL
+
     content: str
     datetime: datetime
 

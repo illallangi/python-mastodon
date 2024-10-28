@@ -32,8 +32,8 @@ class MastodonAdapter(diffsync.Adapter):
         for obj in self.client.get_statuses():
             self.add(
                 Status(
-                    url=obj["url"],
-                    content=obj["content"],
-                    datetime=obj["datetime"],
+                    url=obj.url,
+                    content=obj.content,
+                    datetime=obj.datetime,
                 ),
             )

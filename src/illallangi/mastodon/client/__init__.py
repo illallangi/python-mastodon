@@ -14,6 +14,7 @@ from yarl import URL
 from illallangi.mastodon.__version__ import __version__
 from illallangi.mastodon.client.swim_statistics import SwimStatisticsMixin
 from illallangi.mastodon.client.swims import SwimsMixin
+from illallangi.mastodon.models import Status
 
 CACHE_NAME = Path(user_config_dir()) / "illallangi-mastodon.db"
 
@@ -186,6 +187,8 @@ class MastodonClient(
 
     def get_statuses(
         self,
+        *_: list[Any],
+        debug: bool = True,
     ) -> Generator[dict[str, Any], None, None]:
         # Format the statuses URL with the limit
         url = self.statuses_url % {"limit": 10}
@@ -204,21 +207,27 @@ class MastodonClient(
 
             # Loop over the statuses in the response
             yield from [
-                {
-                    "id": status["id"],
-                    "url": status["uri"],
-                    "datetime": datetime.fromisoformat(status["created_at"]).astimezone(
+                Status(
+                    url=status["uri"],
+                    datetime=datetime.fromisoformat(status["created_at"]).astimezone(
                         timezone.utc
                     ),
-                    "content": html_to_plaintext(status["content"]),
-                    "@status": status,
-                    "@api": {
-                        "from_cache": response.from_cache,
-                        "expires": int(response.expires.timestamp()),
-                        "url": url.human_repr(),
-                        **self.get_info(),
-                    },
-                }
+                    content=html_to_plaintext(status["content"]),
+                    **(
+                        {
+                            "api": {
+                                "from_cache": response.from_cache,
+                                "expires": int(response.expires.timestamp()),
+                                "url": url.human_repr(),
+                                **self.get_info(),
+                            },
+                            "id": int(status["id"]),
+                            "status": status,
+                        }
+                        if debug
+                        else {}
+                    ),
+                )
                 for status in more_itertools.always_iterable(
                     json,
                     base_type=dict,
