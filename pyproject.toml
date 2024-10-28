@@ -57,9 +57,10 @@ DEP002 = []
 [tool.ruff]
 lint.select = ["ALL"]
 lint.ignore = [
-    "D",
     "COM812",
+    "D",
     "E501",
+    "ERA001",
     "ISC001",
 ]
 [tool.ruff.lint.pydocstyle]
