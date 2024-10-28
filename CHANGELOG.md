@@ -1,3 +1,9 @@
+## v0.4.0 (2024-10-28)
+
+### Feat
+
+- **all**: migrated to attrs and cattrs
+
 ## v0.3.6 (2024-10-21)
 
 ### Fix
